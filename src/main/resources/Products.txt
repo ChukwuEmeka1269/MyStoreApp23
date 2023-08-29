@@ -1,0 +1,5 @@
+S/N     ProductName                         Price           Quantity
+1.      Golden-Morn-500g                    1500.0          20.0
+2.      Fruits-And-Fibre                    2800.0          30.0
+3.      Ariel-1000g                         1500.0          250.0
+4.      Delicious-cake-bread                3000.0          100.0
