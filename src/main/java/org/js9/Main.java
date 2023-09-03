@@ -1,12 +1,13 @@
 package org.js9;
 
+import org.js9.fileUtil.StoreFileProductWriterImpl;
 import org.js9.model.*;
 
 import org.js9.service.CashierServiceImpl;
 import org.js9.service.CustomerServiceImpl;
 import org.js9.service.ManagerServiceImpl;
 
-import java.util.List;
+
 import java.util.Map;
 
 public class Main {
@@ -21,7 +22,7 @@ public class Main {
 
         System.out.println("-----------------------------------Product Creation Begins----------------------------------------------");
         Product fruitsAndFibre = new Product("Fruits And Fibre", 2800);
-        fruitsAndFibre.setQuantityInStore(10);
+        fruitsAndFibre.setQuantityInStore(20);
 
         Product goldenMorn = new Product("Golden Morn 500g", 1500);
         goldenMorn.setQuantityInStore(20);
@@ -126,7 +127,7 @@ public class Main {
         var customerService = new CustomerServiceImpl();
 
         System.out.println("-----------------------------------Beginning Customer Purchase----------------------------------------");
-        customerService.buy(customer1, "Fruits And Fibre", 5 );
+        customerService.buy(customer1, "Fruits And Fibre", 25 );
         cashierService.sell(customer1, genCash );
         System.out.println("-----------------------------------End of Customer Purchase----------------------------------------------");
 
@@ -140,8 +141,12 @@ public class Main {
         System.out.println("-----------------------------------Beginning Customer Purchase----------------------------------------");
 //        customerService.buy(customer4, "Fruits And Fibre", 5 );
 
+        Product product9 = new Product("Product9", 12.0, 50.0);
+        var storeFileWriter = new StoreFileProductWriterImpl();
         System.out.println("Product List");
-        store.getStoreProducts("/Users/emirex/Documents/self-development/MyStoreApp/src/main/resources/Products.txt").forEach(System.out::println);
+        String fileName = "/Users/emirex/Documents/self-development/MyStoreApp/src/main/resources/Test.txt";
+        storeFileWriter.write(fileName, product9);
+        store.getStoreProducts(fileName).forEach(System.out::println);
 
 
 

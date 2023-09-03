@@ -1,12 +1,15 @@
 package org.js9.service;
 
 import org.js9.database.ProductDatabase;
+import org.js9.fileUtil.StoreFileWriter;
 import org.js9.model.*;
 import org.js9.util.NameFormat;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class CashierServiceImpl implements CashierService, ProductDatabase {
 
@@ -16,10 +19,49 @@ public class CashierServiceImpl implements CashierService, ProductDatabase {
         List<Product> customerProductList = customer.getProductList();
         double customerBalance = customer.getAccountBalance();
         for(Product product : customerProductList){
-            double quantity = product.getQuantityToBuy();
+            double quantityToBuy = product.getQuantityToBuy();
             double totalCost = customer.calculateTotalPrice();
+            double quantityInStore = product.getQuantityInStore();
             if(!storeProducts.contains(product)){
-                System.out.println("Sorry we do not have this product currently. Please check back soon.");
+                //Todo: handle exception
+                System.out.printf("Sorry we do not have %s currently. Please check back soon.", product.getName());
+                System.out.println();
+                if(customerProductList.size() > 1){
+                    continue;
+                }else{
+                    throw new RuntimeException("Product not found!");
+                }
+            }
+
+            if(quantityInStore < quantityToBuy){
+                //Throw exception
+                System.out.printf("Sorry we only have %s left. Would you like to purchase them? \n", quantityInStore);
+                System.out.println("Press \nY to proceed with purchase and \nN to cancel.");
+                Scanner scanner = new Scanner(System.in);
+                String response = scanner.next();
+                switch(response){
+                    case "Y":
+                    case "y":
+                        System.out.printf("----------------- Selling product { %s } to customer { %s } -------------------------------", product.getName(), customer.getName());
+                        System.out.println();
+                        double quantityRemaining = quantityToBuy - quantityInStore;
+                        quantityToBuy -= quantityRemaining;
+                        sellProductByName(product.getName(), quantityToBuy);
+                        System.out.printf("%s successfully purchased %s qty of %s.", customer.getName(), (int)product.getQuantityToBuy(), product.getName());
+                        System.out.println();
+                        customerBalance -= totalCost;
+                        continue;
+                    case "N":
+                    case "n":
+                        break;
+                    default:
+                        System.out.println("Invalid input. Please try again");
+                        System.exit(0);
+                }
+            }
+
+            if(quantityInStore <= 0){
+                System.out.println("Product out of stock!");
                 break;
             }
             if(customerBalance < totalCost){
@@ -27,16 +69,22 @@ public class CashierServiceImpl implements CashierService, ProductDatabase {
                 break;
             }
 
-            Store store = fetchStore(cashier);
-            System.out.printf("----------------- Selling product { %s } to customer { %s } -------------------------------", product.getName(), customer.getName());
-            System.out.println();
-            store.sellProductByName(product.getName(), quantity);
-            System.out.printf("%s successfully purchased %s qty of %s.", customer.getName(), (int)product.getQuantityToBuy(), product.getName());
-            System.out.println();
-            customerBalance -= totalCost;
+            sellProductByName(product.getName(), quantityToBuy);
+
         }
 
+        FILE_PRODUCT_WRITER.write("/Users/emirex/Documents/self-development/MyStoreApp/src/main/resources/Test.txt", storeProducts);
+
         customer.setAccountBalance(customerBalance);
+
+    }
+
+    //TODO : Create a method for sellProduct that takes a customer reference
+    private void sellProductByName(String productName, double quantityToSell){
+        Product product = storeProducts.get(productName);
+        double remainingQuantityInStore = product.getQuantityInStore() - quantityToSell;
+        product.setQuantityInStore(remainingQuantityInStore);
+        storeProducts.replace(productName, product);
 
     }
 

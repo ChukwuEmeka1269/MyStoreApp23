@@ -20,6 +20,11 @@ public class Product extends BaseEntity{
     }
 
 
+    public Product(String name, double price, double quantityInStore) {
+        this.name = name;
+        this.price = price;
+        this.quantityInStore = quantityInStore;
+    }
 
     public String getName() {
         return name;
@@ -39,10 +44,6 @@ public class Product extends BaseEntity{
 
     public double getQuantityToBuy() {
         return quantityToBuy;
-    }
-
-    public void setQuantityToBuy(int quantityToBuy) {
-        this.quantityToBuy = quantityToBuy;
     }
 
     public void setQuantityToBuy(double quantityToBuy) {
