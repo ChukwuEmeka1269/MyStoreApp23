@@ -57,4 +57,5 @@ public class ManagerServiceImpl implements ManagerService, StaffDatabase {
             System.out.println("Staff may have been fired or does not exist.");
         }
     }
+
 }

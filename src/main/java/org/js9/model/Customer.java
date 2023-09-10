@@ -5,7 +5,7 @@ import org.js9.util.NameFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Customer extends Person{
+public class Customer extends Person {
     private String name;
     private double accountBalance;
 
@@ -59,5 +59,6 @@ public class Customer extends Person{
     public void setProductList(List<Product> productList) {
         this.productList = productList;
     }
+
 
 }

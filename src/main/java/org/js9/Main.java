@@ -22,7 +22,7 @@ public class Main {
 
         System.out.println("-----------------------------------Product Creation Begins----------------------------------------------");
         Product fruitsAndFibre = new Product("Fruits And Fibre", 2800);
-        fruitsAndFibre.setQuantityInStore(20);
+        fruitsAndFibre.setQuantityInStore(2000);
 
         Product goldenMorn = new Product("Golden Morn 500g", 1500);
         goldenMorn.setQuantityInStore(20);
@@ -115,7 +115,8 @@ public class Main {
         var customer4 =  new Customer("Cust004", "C004", Gender.MALE, "Cust004", 10000.0);
         var customer5 =  new Customer("Cust005", "C005", Gender.MALE, "Cust005", 1500.0);
         var customer6 =  new Customer("Cust006", "C006", Gender.MALE, "Cust007", 250.0);
-        System.out.println("-----------------------------------End of Customer Creation----------------------------------------------");
+        System.out.println("-----------------------------------X End of Customer Creation X----------------------------------------------");
+
 
         System.out.println("-----------------------------------CashierService Creation Begins----------------------------------------------");
         var cashierService = new CashierServiceImpl();
@@ -128,18 +129,39 @@ public class Main {
 
         System.out.println("-----------------------------------Beginning Customer Purchase----------------------------------------");
         customerService.buy(customer1, "Fruits And Fibre", 25 );
-        cashierService.sell(customer1, genCash );
+//        cashierService.sell(customer1, genCash );
         System.out.println("-----------------------------------End of Customer Purchase----------------------------------------------");
 
         System.out.println("-----------------------------------Beginning Customer Purchase----------------------------------------");
-//        customerService.buy(customer2, "Fruits And Fibre", 5 );
+        customerService.buy(customer2, "Fruits And Fibre", 5 );
         System.out.println("-----------------------------------End of Customer Purchase----------------------------------------------");
 
         System.out.println("-----------------------------------Beginning Customer Purchase----------------------------------------");
-//        customerService.buy(customer3, "Fruits And Fibre", 5 );
+        customerService.buy(customer3, "Fruits And Fibre", 5 );
 
         System.out.println("-----------------------------------Beginning Customer Purchase----------------------------------------");
-//        customerService.buy(customer4, "Fruits And Fibre", 5 );
+        customerService.buy(customer4, "Fruits And Fibre", 5 );
+        customerService.buy(customer5, "Fruits And Fibre", 5 );
+        customerService.buy(customer6, "Fruits And Fibre", 5 );
+
+
+        System.out.println("-----------------------------------Adding Customer Fifo Queue----------------------------------------------");
+        managerService.addCustomerToFifoQueue(customer3);
+        managerService.addCustomerToFifoQueue(customer1);
+        managerService.addCustomerToFifoQueue(customer2);
+        System.out.println("-----------------------------------X End of Adding to Fifo Queue X----------------------------------------------");
+        System.out.println("-----------------------------------Adding Customer to Priority Queue----------------------------------------------");
+       managerService.addCustomerToPriorityQueue(customer4);
+       managerService.addCustomerToPriorityQueue(customer5);
+       managerService.addCustomerToPriorityQueue(customer6);
+
+        System.out.println("-----------------------------------X End of Adding to Priority Queue X----------------------------------------------");
+
+        cashierService.sell(managerService.getFifoQueue(), genCash);
+        cashierService.sell(managerService.getPriorityQueue(), genCash);
+
+
+
 
         Product product9 = new Product("Product9", 12.0, 50.0);
         var storeFileWriter = new StoreFileProductWriterImpl();
@@ -147,6 +169,8 @@ public class Main {
         String fileName = "/Users/emirex/Documents/self-development/MyStoreApp/src/main/resources/Test.txt";
         storeFileWriter.write(fileName, product9);
         store.getStoreProducts(fileName).forEach(System.out::println);
+
+
 
 
 

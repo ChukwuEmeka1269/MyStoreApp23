@@ -1,17 +1,17 @@
 package org.js9.service;
 
 import org.js9.database.ProductDatabase;
-import org.js9.fileUtil.StoreFileWriter;
 import org.js9.model.*;
 import org.js9.util.NameFormat;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class CashierServiceImpl implements CashierService, ProductDatabase {
+
 
     @Override
     public void sell(Customer customer, Staff cashier) {
@@ -79,6 +79,19 @@ public class CashierServiceImpl implements CashierService, ProductDatabase {
 
     }
 
+    @Override
+    public void sell(Queue<Customer> customerQueue, Staff cashier) {
+        while(!customerQueue.isEmpty()){
+            var customer = customerQueue.peek();
+            sell(customer, cashier);
+            System.out.printf("%s has been attended to. ",customer.getCustomerFullName());
+            System.out.println();
+            System.out.printf("Removing %s from the queue.", customer.getCustomerFullName());
+            customerQueue.poll();
+            System.out.println();
+        }
+    }
+
     //TODO : Create a method for sellProduct that takes a customer reference
     private void sellProductByName(String productName, double quantityToSell){
         Product product = storeProducts.get(productName);
@@ -129,6 +142,8 @@ public class CashierServiceImpl implements CashierService, ProductDatabase {
 
 
     }
+
+
 
     private Receipt getReceipt(Product product, Customer customer, Staff cashier) {
         var receipt = new Receipt();
